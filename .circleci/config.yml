@@ -1,0 +1,32 @@
+  
+version: 2
+jobs:
+  release_image:
+    working_directory: /app
+    docker:
+      - image: docker:stable-git
+
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - deploy:
+          name: Push App Docker Image
+          command: |
+            docker login ${DOCKER_ENDPOINT} -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+            TAG=$(cat package.json | grep -oE '"version":\s+"(.*)"' | awk '{print $2}' | sed 's/\"//g')
+            COMMIT_ID=`git log --format="%h" -n 1`
+            docker build -f app.Dockerfile -t consent-auth0-app .
+            docker tag consent-auth0-app "${DOCKER_ENDPOINT}/consent-auth0-app:${TAG}-${COMMIT_ID}"
+            docker push "${DOCKER_ENDPOINT}/consent-auth0-app:${TAG}-${COMMIT_ID}"
+
+workflows:
+  version: 2
+  push_docker_image:
+    jobs:
+      - release_image:
+          context: Q3-2020
+          filters:
+            branches:
+              only: /^master$/
