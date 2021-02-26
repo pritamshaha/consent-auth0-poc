@@ -1,0 +1,9 @@
+<section class="page-container">
+  <div class="title-bar" *ngIf="auth.isAuthenticated$ | async">
+    <span class="title">Consent Preference Center</span>
+    <div class="logout-div">
+      <button class="logout" (click)="logout()">Log out</button>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</section>
