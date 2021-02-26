@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AuthModule } from '@auth0/auth0-angular';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,11 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AuthModule.forRoot({
+      domain: 'poc-zeotap.au.auth0.com',
+      clientId: '5cm7gjCL4AOv1kn2FfLEMfQJihMfNjgC'
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
